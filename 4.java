@@ -288,3 +288,517 @@ retainAll(Collection<?> c)	boolean	仅保留此 collection 中那些也包含在
 size()	int	返回此 collection 中的元素数
 toArray()	Object[]	返回包含此 collection 中所有元素的数组
 toArray(T[] a)	<T> T[]	返回包含此 collection 中所有元素的数组；返回数组的运行时类型与指定数组的运行时类型相同
+
+// Course.java
+public class Course {
+    public String id;
+    public String name;
+    public Course(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
+}
+
+// MapTest.java
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.Set;
+
+public class MapTest {
+
+    /**
+     * 用来承装课程类型对象
+     */
+    public Map<String, Course> courses;
+
+    /**
+     * 在构造器中初始化 courses 属性
+     * @param args
+     */
+    public MapTest() {
+        this.courses = new HashMap<String, Course>();
+    }
+
+    /**
+     * 测试添加：输入课程 ID，判断是否被占用
+     * 若未被占用，输入课程名称，创建新课程对象
+     * 并且添加到 courses 中
+     * @param args
+     */
+    public void testPut() {
+        //创建一个 Scanner 对象，用来获取输入的课程 ID 和名称
+        Scanner console = new Scanner(System.in);
+
+        for(int i = 0; i < 3; i++) {
+            System.out.println("请输入课程 ID：");
+            String ID = console.next();
+            //判断该 ID 是否被占用
+            Course cr = courses.get(ID);
+            if(cr == null){
+                //提示输入课程名称
+                System.out.println("请输入课程名称：");
+                String name = console.next();
+                //创建新的课程对象
+                Course newCourse = new Course(ID,name);
+                //通过调用 courses 的 put 方法，添加 ID-课程映射
+                courses.put(ID, newCourse);
+                System.out.println("成功添加课程：" + courses.get(ID).name);
+            }
+            else {
+                System.out.println("该课程 ID 已被占用");
+                continue;
+            }
+        }
+    }
+
+    /**
+     * 测试 Map 的 keySet 方法
+     * @param args
+     */
+
+    public void testKeySet() {
+        //通过 keySet 方法，返回 Map 中的所有键的 Set 集合
+        Set<String> keySet = courses.keySet();
+        //遍历 keySet，取得每一个键，在调用 get 方法取得每个键对应的 value
+        for(String crID: keySet) {
+            Course cr = courses.get(crID);
+            if(cr != null){
+                System.out.println("课程：" + cr.name);
+            }
+        }
+    }
+
+    /**
+     * 测试删除 Map 中的映射
+     * @param args
+     */
+    public void testRemove() {
+        //获取从键盘输入的待删除课程 ID 字符串
+        Scanner console = new Scanner(System.in);
+        while(true){
+            //提示输出待删除的课程 ID
+            System.out.println("请输入要删除的课程 ID！");
+            String ID = console.next();
+            //判断该 ID 是否对应的课程对象
+            Course cr = courses.get(ID);
+            if(cr == null) {
+                //提示输入的 ID 并不存在
+                System.out.println("该 ID 不存在！");
+                continue;
+            }
+            courses.remove(ID);
+            System.out.println("成功删除课程" + cr.name);
+            break;
+        }
+    }
+
+    /**
+     * 通过 entrySet 方法来遍历 Map
+     * @param args
+     */
+    public void testEntrySet() {
+        //通过 entrySet 方法，返回 Map 中的所有键值对
+        Set<Entry<String,Course>> entrySet = courses.entrySet();
+        for(Entry<String,Course> entry: entrySet) {
+            System.out.println("取得键：" + entry.getKey());
+            System.out.println("对应的值为：" + entry.getValue().name);
+        }
+    }
+
+    /**
+     * 利用 put 方法修改Map 中的已有映射
+     * @param args
+     */
+    public void testModify(){
+        //提示输入要修改的课程 ID
+        System.out.println("请输入要修改的课程 ID：");
+        //创建一个 Scanner 对象，去获取从键盘上输入的课程 ID 字符串
+        Scanner console = new Scanner(System.in);
+        while(true) {
+            //取得从键盘输入的课程 ID
+            String crID = console.next();
+            //从 courses 中查找该课程 ID 对应的对象
+            Course course = courses.get(crID);
+            if(course == null) {
+                System.out.println("该 ID 不存在！请重新输入！");
+                continue;
+            }
+            //提示当前对应的课程对象的名称
+            System.out.println("当前该课程 ID，所对应的课程为：" + course.name);
+            //提示输入新的课程名称，来修改已有的映射
+            System.out.println("请输入新的课程名称：");
+            String name = console.next();
+            Course newCourse = new Course(crID,name);
+            courses.put(crID, newCourse);
+            System.out.println("修改成功！");
+            break;
+        }
+    }
+
+    public static void main(String[] args) {
+        MapTest mt = new MapTest();
+        mt.testPut();
+        mt.testKeySet();
+        mt.testRemove();
+        mt.testModify();
+        mt.testEntrySet();
+
+    }
+}
+
+import java.util.HashSet;
+import java.util.Set;
+/*
+ * 项目组长类
+ */
+public class PD {
+
+    public String id;
+    public String name;
+    //集合后面的<>代表泛型的意思
+    //泛型是规定了集合元素的类型
+    public Set<Student> students;
+    public PD(String id, String name){
+        this.id = id;
+        this.name = name;
+        this.students = new HashSet<Student>();
+    }
+}
+
+public class Student {
+    public String id;
+    public String name;
+    public Student(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+
+// SetTest.java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class SetTest {
+
+    public List<Student> students;
+
+    public SetTest() {
+        students = new ArrayList<Student>();
+    }
+
+    /*
+     * 用于往students中添加学生
+     */
+    public void testAdd() {
+        //创建一个学生对象，并通过调用add方法，添加到学生管理List中
+        Student st1 = new Student("1", "张三");
+        students.add(st1);
+
+        //添加到List中的类型均为Object，所以取出时还需要强转
+
+        Student st2 = new Student("2","李四");
+        students.add(st2);
+
+        Student[] student = {new Student("3", "王五"),new Student("4", "马六")};
+        students.addAll(Arrays.asList(student));
+
+        Student[] student2 = {new Student("5", "周七"),new Student("6", "赵八")};
+        students.addAll(Arrays.asList(student2));
+
+    }
+
+    /**
+     * 通过for each 方法访问集合元素
+     * @param args
+     */
+    public void testForEach() {
+        System.out.println("有如下学生（通过for each）：");
+        for(Object obj:students){
+            Student st = (Student)obj;
+            System.out.println("学生：" + st.id + ":" + st.name);
+        }
+    }
+
+    public static void main(String[] args){
+        SetTest st = new SetTest();
+        st.testAdd();
+        st.testForEach();
+        PD pd = new PD("1","张老师");
+        System.out.println("请：" + pd.name + "选择小组成员！");
+        //创建一个 Scanner 对象，用来接收从键盘输入的学生 ID
+        Scanner console = new Scanner(System.in);
+
+        for(int i = 0;i < 3; i++){
+            System.out.println("请输入学生 ID");
+            String studentID = console.next();
+            for(Student s:st.students){
+                if(s.id.equals(studentID)){
+                    pd.students.add(s);
+                }
+            }
+        }
+        st.testForEachForSer(pd);
+        // 关闭 Scanner 对象
+        console.close();
+    }
+    //打印输出，老师所选的学生！Set里遍历元素只能用foreach 和 iterator 
+    //不能使用 get() 方法，因为它是无序的，不能想 List 一样查询具体索引的元素
+    public void testForEachForSer(PD pd){
+        for(Student s: pd.students) {
+        System.out.println("选择了学生：" + s.id + ":" + s.name);
+        }
+    }
+
+}
+
+方法名	描述
+void sort(List list)	按自然升序排序
+void sort(List list, Comparator c)	自定义排序规则排序
+void shuffle(List list)	随机排序，用于打乱顺序
+void reverse(List list)	反转，将列表元素顺序反转
+void swap(List list, int i , int j)	交换处于索引 i 和 j 位置的元素
+int binarySearch(List list, Object key)	二分查找，列表必须有序，返回找到的元素索引位置
+int max(Collection coll)	查找最大值
+int min(Collection coll)	查找最小值
+void fill(List list, Object obj)	使用 obj 填充 list 所有元素
+boolean replaceAll(List list, Object oldVal, Object newVal)	使用用 newVal 替换所有的 oldVal。
+<K,V> Map<K,V> synchronizedMap(Map<K,V> m)	将 m 包装为线程安全的 Map
+<T> List<T> synchronizedList(List<T> list)	将 list 包装为线程安全的 List
+
+//CollectionsDemo.java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CollectionsDemo {
+    public static void main(String[] args) {
+//        创建一个空List
+        List<Integer> list = new ArrayList<>();
+        //赋值
+        list.add(3);
+        list.add(5);
+        list.add(7);
+        list.add(9);
+        list.add(12);
+        System.out.print("初始顺序：");
+        list.forEach(v -> System.out.print(v + "\t"));
+
+
+        //打乱顺序
+        Collections.shuffle(list);
+        System.out.print("\n打乱顺序：");
+        list.forEach(v -> System.out.print(v + "\t"));
+
+        //反转
+        Collections.reverse(list);
+        System.out.print("\n反转集合：");
+        list.forEach(v -> System.out.print(v + "\t"));
+
+        //第一个位和最后一位交换
+        Collections.swap(list,0,list.size()-1);
+        System.out.print("\n交换第一位和最后一位：");
+        list.forEach(v -> System.out.print(v + "\t"));
+
+        //按自然升序排序
+        Collections.sort(list);
+        System.out.print("\nSort排序后：");
+        list.forEach(v -> System.out.print(v + "\t"));
+
+        //二分查找 必须排序后
+        System.out.print("\n二分查找数值7的位置："+Collections.binarySearch(list, 7));
+
+        //返回线程安全的list
+        List<Integer> synchronizedList = Collections.synchronizedList(list);
+    }
+}
+
+//sortDemo.java
+import java.util.Arrays;
+
+public class InsertSort {
+    public static void sort(int[] arr) {
+        int temp;
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j < i; j++) {
+                //对已经排序好的元素比较，找到一个比插入元素大的元素 交换位置
+                if (arr[i] < arr[j]) {
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {5, 3, 4, 1, 2};
+        sort(ints);
+        System.out.println(Arrays.toString(ints));
+    }
+}
+
+import java.util.Arrays;
+
+public class BubbleSort {
+    public static void sort(int[] arr) {
+        for (int i = 0; i < arr.length-1; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                //如果当前元素比后一位元素大 交换位置
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {5, 3, 4, 1, 2};
+        sort(ints);
+        System.out.println(Arrays.toString(ints));
+    }
+}
+
+import java.util.Arrays;
+
+public class MergeSort {
+
+    public static void mergeSort(int[] arrays, int left, int right) {
+//        如果数组还可以拆分
+        if (left < right) {
+            //数组的中间位置
+            int middle = (left + right) / 2;
+            //拆分左边数组
+            mergeSort(arrays, left, middle);
+            //拆分右边数组
+            mergeSort(arrays, middle + 1, right);
+            //合并
+            merge(arrays, left, middle, right);
+
+        }
+    }
+
+
+    /**
+     * 合并数组
+     */
+    public static void merge(int[] arr, int left, int middle, int right) {
+        //申请合并空间 大小为两个已经排序序列之和
+        int[] temp = new int[right - left + 1];
+        //i 和 j为两个已经排好序的数组的起始位置
+        int i = left;
+        int j = middle + 1;
+        int k = 0;
+        //排序
+        while (i <= middle && j <= right) {
+            //将比较小的数组放入合并空间
+            if (arr[i] < arr[j]) {
+                temp[k++] = arr[i++];
+            } else {
+                temp[k++] = arr[j++];
+            }
+        }
+        //将左边剩余元素写入合并空间
+        while (i <= middle) {
+            temp[k++] = arr[i++];
+        }
+        //将右边剩余的元素写入合并空间
+        while (j <= right) {
+            temp[k++] = arr[j++];
+        }
+        //将排序后的数组写回原来的数组
+        for (int l = 0; l < temp.length; l++) {
+            arr[l + left] = temp[l];
+        }
+
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {5, 3, 4, 1, 2};
+        mergeSort(ints,0,ints.length-1);
+        System.out.println(Arrays.toString(ints));
+    }
+}
+
+import java.util.Arrays;
+
+public class QuickSort {
+    public static void sort(int[] arr, int head, int tail) {
+        if (head >= tail || arr == null || arr.length <= 1) {
+            return;
+        }
+        //设置数组的起始位置 i 结束位置j 基准 pivot 为数组的中间
+        int i = head, j = tail, pivot = arr[(head + tail) / 2];
+        while (i <= j) {
+            //当数组小于基准 循环结束后 相当于i所处的位置的值为大于基准的元素
+            while (arr[i] < pivot) {
+                ++i;
+            }
+            //当数组大于基准 循环结束后 相当于j所处的位置的值为小于于基准的元素
+            while (arr[j] > pivot) {
+                --j;
+            }
+            //如果i<j 那么则将交互i j对应位置的值
+            if (i < j) {
+                int t = arr[i];
+                arr[i] = arr[j];
+                arr[j] = t;
+                //将指针继续移动
+                ++i;
+                --j;
+            } else if (i == j) {
+//如果i=j 那么说明本次排序已经结束 将i++ 如果这里不使用i++ 那么后面的sort(arr,i,tail)将改为arr(arr,i+1,tail)
+                ++i;
+            }
+        }
+        //继续将数组分割  
+        sort(arr, head, j);
+        sort(arr, i, tail);
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {5, 3, 4, 1, 2};
+        sort(ints, 0, ints.length - 1);
+        System.out.println(Arrays.toString(ints));
+    }
+}
+
+public class BinarySearch {
+    public static int search(int[] arr, int key) {
+        int low = 0;
+        int high = arr.length - 1;
+        while (low <= high) {
+            int middle = (high + low) / 2;
+            //如果相等 返回值
+            if (key == arr[middle]) {
+                return key;
+            } else if (key < arr[middle]) {
+                //如果key小于中间值，那么改变high，值可能在左边部（比较小的部分）
+                high = middle - 1;
+            }else {
+                //如果key大于中间值，那么改变low，值可能在右边部（比较大的部分）
+                low = middle + 1;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {5, 3, 4, 1, 2};
+        System.out.println(search(ints, 4));
+    }
+}
+
